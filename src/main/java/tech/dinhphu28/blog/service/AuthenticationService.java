@@ -11,6 +11,7 @@ import tech.dinhphu28.blog.entity.User;
 import tech.dinhphu28.blog.model.AuthenticationRequest;
 import tech.dinhphu28.blog.model.AuthenticationResponse;
 import tech.dinhphu28.blog.model.RegisterRequest;
+import tech.dinhphu28.blog.model.RegisterResponse;
 import tech.dinhphu28.blog.repository.TokenRepository;
 import tech.dinhphu28.blog.repository.UserRepository;
 
@@ -24,7 +25,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
 
-    public void register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -33,6 +34,12 @@ public class AuthenticationService {
                 .build();
 
         var savedUser = userRepository.save(user);
+
+        RegisterResponse response = RegisterResponse.builder()
+                .status(200)
+                .message("Next step: verification")
+                .build();
+        return response;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
