@@ -55,7 +55,7 @@ public class TOTPService {
         return false;
     }
 
-    public int generate(String secret, long interval) {
+    private int generate(String secret, long interval) {
         return hash(secret, interval);
     }
 
