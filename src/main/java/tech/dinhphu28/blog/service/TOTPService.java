@@ -55,6 +55,12 @@ public class TOTPService {
         return false;
     }
 
+    public int generate(String secret) {
+        long currentInterval = new Clock().getCurrentInterval();
+        int candidate = generate(secret, currentInterval);
+        return candidate;
+    }
+
     private int generate(String secret, long interval) {
         return hash(secret, interval);
     }
