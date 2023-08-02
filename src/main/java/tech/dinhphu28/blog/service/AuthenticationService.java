@@ -65,6 +65,30 @@ public class AuthenticationService {
 
         sendMailSMTPService.sendHtmlEmail("Your verification code", "<h3>" + verificationCode + "</h3>", email);
     }
+
+    public VerificationResponse verifyAndActivateUser(VerificationRequest request) throws OTPNotVerifiedException {
+        VerificationResponse response;
+
+        if(!isOTPVerificationValid(request.getOtp(), request.getEmail())) {
+            throw new OTPNotVerifiedException("OTP cannot be verified");
+        } else {
+            userService.activateUser(request.getEmail());
+
+            response = VerificationResponse.builder()
+                    .status(200)
+                    .message("User is verified")
+                    .build();
+        }
+
+        return response;
+    }
+
+    private boolean isOTPVerificationValid(String otp, String email) {
+        String otpSecret = totpService.generateSecret(email);
+        boolean isValid = totpService.verify(otpSecret, otp, MAX_DELAY_INTERVALS);
+        return isValid;
+    }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
