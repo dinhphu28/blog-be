@@ -42,6 +42,15 @@ public class AuthenticationService {
 
         var savedUser = userRepository.save(user);
 
+        Thread sendMailThread = new Thread(() -> {
+            try {
+                sendMailRegisterVerificationCode(user.getEmail());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
+        sendMailThread.start();
+
         RegisterResponse response = RegisterResponse.builder()
                 .status(200)
                 .message("Next step: verification")
@@ -49,6 +58,13 @@ public class AuthenticationService {
         return response;
     }
 
+    private void sendMailRegisterVerificationCode(String email) throws MessagingException {
+
+        String otpSecret = totpService.generateSecret(email);
+        int verificationCode = totpService.generate(otpSecret);
+
+        sendMailSMTPService.sendHtmlEmail("Your verification code", "<h3>" + verificationCode + "</h3>", email);
+    }
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
