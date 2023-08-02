@@ -71,6 +71,11 @@ public class AuthenticationService {
         );
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+        if(!user.isEnabled()) {
+            throw new RuntimeException("User is cannot be authenticated");
+        }
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
