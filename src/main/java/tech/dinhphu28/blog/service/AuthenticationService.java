@@ -1,17 +1,17 @@
 package tech.dinhphu28.blog.service;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.dinhphu28.blog.entity.Role;
 import tech.dinhphu28.blog.entity.Token;
 import tech.dinhphu28.blog.entity.TokenType;
 import tech.dinhphu28.blog.entity.User;
-import tech.dinhphu28.blog.model.AuthenticationRequest;
-import tech.dinhphu28.blog.model.AuthenticationResponse;
-import tech.dinhphu28.blog.model.RegisterRequest;
-import tech.dinhphu28.blog.model.RegisterResponse;
+import tech.dinhphu28.blog.exception.OTPNotVerifiedException;
+import tech.dinhphu28.blog.model.*;
 import tech.dinhphu28.blog.repository.TokenRepository;
 import tech.dinhphu28.blog.repository.UserRepository;
 
@@ -24,6 +24,11 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
+    private final TOTPService totpService;
+    private final SendMailSMTPService sendMailSMTPService;
+    private final UserService userService;
+
+    private final int MAX_DELAY_INTERVALS = 4;
 
     public RegisterResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -31,6 +36,8 @@ public class AuthenticationService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .isEnabled(false)
+                .role(Role.USER)
                 .build();
 
         var savedUser = userRepository.save(user);
