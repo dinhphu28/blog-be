@@ -2,6 +2,7 @@ package tech.dinhphu28.blog.service;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -95,10 +96,6 @@ public class AuthenticationService {
         );
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-
-        if(!user.isEnabled()) {
-            throw new RuntimeException("User is cannot be authenticated");
-        }
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
