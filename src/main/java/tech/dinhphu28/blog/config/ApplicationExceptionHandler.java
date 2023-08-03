@@ -2,6 +2,9 @@ package tech.dinhphu28.blog.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,17 +41,17 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UsernameNotFoundException.class)
     public ExceptionHandlerResponse handleUsernameNotFoundException(UsernameNotFoundException exception,
                                                                     HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
 
-        ExceptionHandlerResponse exceptionHandlerResponse = ExceptionHandlerResponse.builder()
+        return ExceptionHandlerResponse.builder()
                 .timestamp(sdf.format(new Date()))
                 .status(httpStatus.value())
                 .error(httpStatus.getReasonPhrase())
                 .message(exception.getMessage())
                 .path(request.getServletPath())
                 .build();
-        return exceptionHandlerResponse;
     }
 }
