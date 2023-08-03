@@ -29,15 +29,13 @@ public class ApplicationExceptionHandler {
                                                                   HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
 
-        ExceptionHandlerResponse exceptionHandlerResponse = ExceptionHandlerResponse.builder()
+        return ExceptionHandlerResponse.builder()
                 .timestamp(sdf.format(new Date()))
                 .status(httpStatus.value())
                 .error(httpStatus.getReasonPhrase())
                 .message(exception.getMessage())
                 .path(request.getServletPath())
                 .build();
-
-        return exceptionHandlerResponse;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
