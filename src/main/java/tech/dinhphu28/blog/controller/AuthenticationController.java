@@ -27,6 +27,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
+    // TODO: Add method resend OTP via email
+
     @PostMapping(
             value = "/verify",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -35,5 +37,14 @@ public class AuthenticationController {
     public ResponseEntity<VerificationResponse> verify(@RequestBody VerificationRequest request) {
 
         return ResponseEntity.ok(authenticationService.verifyAndActivateUser(request));
+    }
+
+    @PostMapping(
+            value = "/authenticate",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }
