@@ -52,4 +52,19 @@ public class ApplicationExceptionHandler {
                 .path(request.getServletPath())
                 .build();
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ExceptionHandlerResponse handleAccessDeniedException(AccessDeniedException exception,
+                                                                HttpServletRequest request) {
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+
+        return ExceptionHandlerResponse.builder()
+                .timestamp(sdf.format(new Date()))
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .message(exception.getMessage())
+                .path(request.getServletPath())
+                .build();
+    }
 }
