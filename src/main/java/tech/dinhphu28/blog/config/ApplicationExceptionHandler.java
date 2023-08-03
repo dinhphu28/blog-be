@@ -67,4 +67,19 @@ public class ApplicationExceptionHandler {
                 .path(request.getServletPath())
                 .build();
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AuthenticationException.class)
+    public ExceptionHandlerResponse handleAuthenticationException(AuthenticationException exception,
+                                                                 HttpServletRequest request) {
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+
+        return ExceptionHandlerResponse.builder()
+                .timestamp(sdf.format(new Date()))
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .message(exception.getMessage())
+                .path(request.getServletPath())
+                .build();
+    }
 }
