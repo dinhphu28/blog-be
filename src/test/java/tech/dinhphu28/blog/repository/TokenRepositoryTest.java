@@ -2,6 +2,7 @@ package tech.dinhphu28.blog.repository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,11 +29,6 @@ class TokenRepositoryTest {
     void tearDown() {
         underTest.deleteAll();
     }
-
-//    @BeforeEach
-//    void setup() {
-//
-//    }
 
     @Test
     void canFindAllValidTokenByUser() {
