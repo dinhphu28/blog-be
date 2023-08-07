@@ -51,10 +51,10 @@ public class TOTPService {
         return false;
     }
 
-    public int generate(String secret) {
+    public String now(String secret) {
         long currentInterval = new Clock().getCurrentInterval();
         int candidate = generate(secret, currentInterval);
-        return candidate;
+        return leftPadding(candidate);
     }
 
     private int generate(String secret, long interval) {

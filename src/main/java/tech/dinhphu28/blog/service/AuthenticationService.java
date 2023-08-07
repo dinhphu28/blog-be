@@ -62,7 +62,7 @@ public class AuthenticationService {
     private void sendMailRegisterVerificationCode(String email) throws MessagingException {
 
         String otpSecret = totpService.generateSecret(email);
-        int verificationCode = totpService.generate(otpSecret);
+        String verificationCode = totpService.now(otpSecret);
 
         sendMailSMTPService.sendHtmlEmail("Your verification code", "<h3>" + verificationCode + "</h3>", email);
     }
