@@ -1,8 +1,5 @@
 package tech.dinhphu28.blog.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jboss.aerogear.security.otp.Totp;
 import org.jboss.aerogear.security.otp.api.*;
 import org.springframework.stereotype.Service;
@@ -10,7 +7,6 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-@Getter
 @Service
 public class TOTPService {
 
@@ -87,5 +83,9 @@ public class TOTPService {
                 (hash[offset + 3] & 0xff);
 
         return binary % Digits.SIX.getValue();
+    }
+
+    private String leftPadding(int otp) {
+        return String.format("%06d", otp);
     }
 }
